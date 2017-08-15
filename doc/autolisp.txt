@@ -1,0 +1,350 @@
+*autolisp.txt*    For Vim version 8.0 Last change: 2017 August 11
+*autolisp*
+
+AutoCAD autolisp cheatsheet
+
+===============================================================================
+CONTENTS
+
+    1.  Loading Programs ...........................|autolisp-loading|
+    2.  Math .......................................|autolisp-math|
+    3.  Variables ..................................|autolisp-variables|
+    4.  Comments ...................................|autolisp-comments|
+    5.  List .......................................|autolisp-list|
+    6.  Prompt .....................................|autolisp-prompt|
+    7.  AutoCAD commands ...........................|autolisp-autocad|
+    8.  Functions ..................................|autolisp-functions|
+    9.  List Processing ............................|autolisp-list-processing|
+    10. User input .................................|autolisp-user-input|
+    11. System variable.............................|autolisp-system-variable|
+    12. Distances and Angles........................|autolisp-distances-angles|
+    13. Object snap ................................|autolisp-object-snap|
+    14. String conversions .........................|autolisp-string-conversions|
+    15. String data ................................|autolisp-string-data|
+    16. Printing ...................................|autolisp-printing|
+    17. Conditional expressions ....................|autolisp-conditional-expressions|
+    18. IF statement ...............................|autolisp-if-statement|
+    19. COND statement .............................|autolisp-cond-statement|
+    20. Looping ....................................|autolisp-looping|
+    21. Foreach ....................................|autolisp-foreach|
+    22. Counting ...................................|autolisp-counting|
+    23. Selection sets .............................|autolisp-selection-sets|
+
+===============================================================================
+1. Loading Programs                                  *autolisp-loading*
+
+;; Loading LISP programs
+(load FILENAME [ONFAILURE})	(load "pipe.lsp" "Error:File not loaded")
+
+2. Math Functions                                    *autolisp-math*
+
+(+ NUM1 NUM2)		(+ 4 2)			;returns 6	: 4 + 2 = 6
+(- NUM1 NUM2)		(- 4 2)			;returns 2	: 4 - 2 = 2
+(* NUM1 NUM2)		(* 4 2)			;returns 8	: 4 * 2 = 8
+(/ NUM1 NUM2)		(/ 4 2)			;returns 2	: 4 ÷ 2 = 2
+(fix NUM)		(fix 15.6) 		;returns 15	: returns the integer value of a number not rounded
+(float NUM)		(float 16) 		;returns 16.0	: promots any number to real
+(abs NUM)		(abs -42) 		;returns 42	: returns absolute value of number
+(rem NUM)		(rem 21 8) 		;returns 5	: returns only the remainder after 21/8
+(gcd NUM)		(gcd 27 9)		;returns 9	: greatest common denominator
+(max NUM)		(max 17 55)		;returns 55	: returns the largest argument
+(min NUM)		(min 17 55)		;returns 17	: returns the smallest argument
+(sin ANGLE)		(sin (dtr 30.0))	;returns 0.5	: note dtr and rtd 
+(cos ANGLE)		(cos (dtr 30.))		;returns 0.866	: converts degree's and radians
+(atan NUM1 [NUM2])	(rtd  (atan 4.0))	;returns 75.9638 : returns atan of number
+(expt BASE POWER)	(expt 3 2)		;returns 9	: 3^2
+(sqrt NUM)		(sqrt 16)		;returns 4	: returns square root of number
+(log NUM)		(log 6)			;returns 1.79176 : retunrs log of number
+(exp NUM)		(exp 1)			;returns 2.71828 : exp is the inverse of log
+	
+3. Setting Variables                                 *autolisp-variables*
+
+(set 'SYMBOL VALUE)
+(setq SYMBOL VALUE)	(setq X 2)	;returns 2
+			(setq X "ABC")	;returns "ABC"
+(eval EXPR)				;returns results of expression
+
+4. Commments                                        *autolisp-comments*
+
+; this is a comment
+(setq X ;| comment |; 2)	;in line comments
+
+5. List                                 *autolisp-list*
+
+(setq X (quote (A B C D)))	;creates a list
+(setq X '(A B C D))		;creats list, same as quote
+(setq X (list "abc" "def"))	 
+(append (list 1 2) (list 3))	;returns (1 2 3)	:used to merge lists together
+
+6. Prompt message to screen                     *autolisp-prompt*
+
+(prompt MESSAGE)	;ex. (prompt "Hello World")
+
+7. AutoCAD commands                     *autolisp-autocad*
+
+(command ".line" "2,2" "4,4" "")	;lisp variables don't need quotes
+(command ".line" PT1 PT2 "")
+(command "-hatch" PT1 "p" "AR-CONC" "1" "0" "")  ;use -command to disable dialog box
+
+8. Functions                     *autolisp-functions*
+
+(defun SYMBOL ARGUMENT-LIST EXPRESSION)
+	(defun AddNumbers (x y) (+ x y))
+		(setq a 1)
+		(setq b 2)
+		(setq c (AddNumbers a b))	;this would set c equal to  3
+	(defun c:AddNumbers (x y) (+ x y))	;c: will make this an autocad command
+
+9. List processing                     *autolisp-list-processing*
+
+(setq MyList (list "a" "b" "c" "d")
+(car MyList)	;returns the first item in a list = "a"
+(cdr MyList)	;returns all items in list besides the first = "b" "c" "d"
+(cadr MyList)	;returns the second item in a list = "b"
+(caddr MyList)	;returns the third item in a list = "c"
+(last MyList)	;returns the last item in a list = "d"
+(length MyList)	;returns the number of items in a list = 4
+
+(assoc ITEM ALIST)	;returns data from an association list
+	example:
+		(setq ALIST '(1 "DOGS" "CATS") (2 "FROG" "SNAKE") (3 "ME" "YOU))
+		(setq people (assoc 3 ALIST))	 	;returns (3 "ME" "YOU")
+		(setq pets (cdr (assoc 1 ALIST))	;returns ("DOGS" "CATS")	
+
+(cons NEW-FIRST-ELEMENT LIST)			;used to build a association list
+	example:
+		(seq A 1 B "ONE")
+		(cons A B)		;returns (1 . "ONE") 
+
+(setq NEWLIST '("u" "v" "w" "x" "y" "z"))
+	;used to test if item is in list, if true item is returned with remainder of list
+(member EXPR LIST)	(member 'x NEWLIST)	;returns ("x" "y" "z")
+(reverse LIST)		(reverse NEWLIST)	;returns ("z" "y" "x" "w" "v" "u")
+(nth N LIST)		(nth 3 NEWLIST)		;returns ("x")
+(apply FUNCTION LIST)	(apply 'strcat NEWLIST)	;returns "uvwxyz" 	: use to run function on whole list 
+								  	: data type must be consistant
+(mapcar FUNCTION LIST1 ... LISTN)
+	; use to run function on first item in each list, then second, and so forth
+	example:
+		(mapcar 'setvar '("BLIPMODE" "CMDECHO" "EXPERT") '(0 0 1))
+		same as:
+			(setvar "BLIPMODE" 0)
+			(setvar "CMDECHO" 0)
+			(setvar "EXPERT" 1)
+The lamba function can be with mapcar as a temp function
+
+
+10. User input                     *autolisp-user-input*
+
+(getint "\nEnter an integer: )	;any number between -32768 and 32767
+(getreal "\nEnter a number: )	;for real numbers ex. 3.14
+(getstring "\nWhat is your name? ")	;for strings
+
+;; Controlling User Input
+Codes:
+	1	value must be supplied no null
+	2	value may not be zero
+	4	no negative numbers
+	8	ignore AutoCAD limits
+	16	depricated
+	32	use dashed lines for rubberband
+	64	ignores Z coordinate for distances
+	128	allows any input
+
+;; Using codes with input request
+(getint 4 "\nEnter an integer: )	;will not allow negative numbers
+(initget 1 "Y N")	;uses control codes and sets up a keyword list 
+			;for next (get????) command
+(getkword "\nDelete pipe? <Y/N>: ")	;will only allow Y or N ansewers
+
+;; AutoCAD user inputs
+(getpoint "\nLocated Center of block)	;user selects point - returns a point (0 0)
+(getangle "\nSpecify the angle: ")	;user select angle - returns angle
+(getangle '(5.0 7.0) "\nSpecify the angle")	;here the user is giving the base point
+(getorient "\nSpecify the angle: ")	;similar to getangle but ignores AutoCAD's default ANGBASE and ANGDIR
+
+11. System Variables                     *autolisp-system-variable*
+
+(getvar "CLAYER")		;returns current autocad layer
+(setvar "CLAYER" "Defpoints")	;sets current autocad layer to Defpoints
+
+12. Distances and Angles                     *autolisp-distances-angles*
+
+(angle PT1 PT2)		;returns the angle between two points
+(distance PT1 PT2)	;returns the distance between two points
+(polar PT ANGLE DISTINACE)	;returns a new point from the distance and angle from PT
+(inters PT1 PT2 PT3 PT4)	;returns the point of intersection
+
+13. Object snap                                 *autolisp-object-snap*
+
+(onsnap '(5 4) "CEN")	;returns (3.0 4.0 0.0) - (onsnap PT MODE-STRING)
+
+Onsnap Codes:
+	0 = None
+	1 = ENDPoint
+	2 = MIDPoint
+	4 = CENter
+	8 = NODe
+	16 = QUAdrant
+	32 = INTersection
+	64 = INSertion
+	128 = PERPendicular
+	256 = TANgent
+	512 = NEArest
+	1024 = QUICK
+	2048 = APParent intersectin
+
+(setvar "OSMODE" 2) 	;sets OSNAP to midpoint
+(setvar "OSMODE" 3)	;sets OSNAP to endpoint and midpoint 
+			;add numbers together for simultaneously
+
+14. Strings conversions                      *autolisp-string-conversions*
+
+(atof STRING)	(atof "33.75")		;returns 33.75 :turn string into real numbers
+		(atof "12x14 Deck")	;returns 12.0
+(distof STRING [MODE])	;converts string into a real number (distance)
+	Modes:
+		1 = Scientific
+		2 = Decimal
+		3 = Engineering (feet and decimal inches)
+		4 = Architectural (feet and fraction inches
+		5 = Arbitrary fractional units
+	example:	(disof "8'-10 1/2\"" 4)	;returns 106.5
+(atoi STRING)			(atoi "33.75")		;returns 33	:turn string into integer
+(rtos NUMBER [MODE[PRECISION]])	(rtos 68.91)	;returns "68.91" : turn a real into a string
+(itoa INTEGER)			(itoa 68)	;returns "68"	: turn a integer to ascii string
+(angtos ANGLE [MODE[PRECISION]]) 	;converts angle to string
+(angtof STRING [MODE])
+	Modes:
+		0 = Degrees
+		1 = Degress/minutes/seconds
+		2 = Grads
+		3 = Radians
+		4 = Surveyor's units
+(ascii STRING)	(ascii "A")		;returns 65	:turns first letter in string to ascii code(integer)
+(chr INTEGER)	(chr 65)		;returns "A"	:turns ascii code(interger) into string
+(read STRING)	(read "foo bar")	;returns foo
+		(read "1 2 3")		;returns 1	:returns the first atom from string and
+							:turns it into corresponding data type
+
+15. Strings data                            *autolisp-string-data*
+
+(strcase STRING [WHICH])	(strcase "Test")	;returns "TEST"
+				(strcase "Test" T)	;returns "test" 	: used to upper or lower case string
+(strcat STRING1 [STRING2])	(strcat "foo" "bar")	;returns "foobar" 	: used to join strings
+(strlen STRING)			(strlen "ABC")		;returns 3 		: returns a interger with the legnth of string
+(substr STRING START [LENGTH})	(substr "Foo Bar" 5)	;returns "Bar"		: used to extract part of a string
+(acad_strlsort LIST)		(acad_strlsort '("c" "b" "a"))	;returns ("a" "b" "c")	:sorts list
+(getcname CNAME)		;used to test existance of an AutoCAD command
+
+
+16. Printing                              *autolisp-printing*
+
+(prin1 EXPR)	(prin1 "3.145")	;prints "3.145" and returns "3.145"	:prints and returns the value
+(princ EXPR)	;the same as prin1 except a blank (princ) will cause function to return NULL
+(print EXPR)	;the same as prin1 except add a new line before EXPR
+
+17. Conditional expressions               *autolisp-conditional-expressions*
+
+(= ATOM ATOM)	(= 1 1) ;returns T 	(= 1 2) ;returns nil	
+(/= ATOM ATOM)	(/= 1 1) ;returns nil	(/= 1 2) ;returns T
+Other conditions (< ATOM ATOM) (> ATOM ATOM) (<= ATOM ATOM) (>= ATOM ATOM)
+(atom ITEM)	(atom "a") ;returns T	: any item that is not a LIST returns T
+(listp ITEM)	(listp '(a b)) ;returns T : any item that is a LIST returns T
+(numebrp ITEM)	(numberp 1) ;returns T : any item that is a number returns T
+(minusp ITEM)	(minusp -1) ;returns T : any item that is a negative number returns T
+(zerop ITEM)	(zerop 0) ;returns T : any item that evaluates to zero returns T
+(boundp ATOM)	(boundp 'A) ;returns nil : any quotes symbol that have a value returns T
+(null ITEM)	(null '()) ;returns T : any item that is NULL with return T
+
+
+18. IF statement                         *autolisp-if-statement*
+
+(if (TEST) (THEN) (ELSE))
+(if (= 0 0) (princ "TRUE") (princ "FALSE"))
+(if (= 0 0)
+	(progn				;progn is used to evaluate more then one statement
+		(princ "TRUE")		;can be used for both the THEN and ELSE
+		(princ "TRUE")
+	)
+	(princ "FALSE"))
+
+(if (and (TEST) (TEST)) (THEN) (ELSE))		; AND function
+(if (or (TEST) (TEST)) (THEN) (ELSE))		; OR function
+(if (not (and (TEST) (TEST))) (THEN) (ELSE)) 	; NAND function
+(if (not (or (TEST) (TEST))) (THEN) (ELSE)) 	; NOR function
+
+(type ITEM)	(type 1.0) ;return REAL	;returns the data type of item
+	REAL	= floating point number
+	INT	= integer
+	STR	= text string
+	SYM	= symbol names
+	LIST	= lists
+	FILE	= file descriptors
+	PICKSET	= AutoCAD selection set
+	ENAME	= AutoCAD entity names
+	SUBR	= internal AutoLISP functions
+	EXSUBR 	= external (ADS) functions
+	PAGETB 	= function paging table
+
+19. COND statement                         *autolisp-cond-statement*
+
+(cond (TEST1 (THEN))		; this works similar to SELECT CASE in 
+      (TEST2 (THEN))		; other languages
+      (TEST3 (THEN))
+)	
+
+20. Looping                                *autolisp-looping*
+
+(repeat NUMBER EXPR ...)	(repeat 10 (set x (+ 2 2) 	;will loop 10 times
+(while TESTEXPR EXPR ...)	
+	(setq i 1)	
+	(while (< i 4)			;will loop while x is less then 4
+		(setq i (+ i 1)))
+
+21. Foreach                                *autolisp-foreach*
+
+(foreach NAME LIST EXPR ...)		;list one element of list during each loop
+	(foreach LTR (list "A" "B" "C" "D")
+		(princ (strcat "\n" LTR)))
+	(foreach S '(a b c)
+		(set S (getint "\nEnter an integer: ")))
+
+22. Counting                                *autolisp-counting*
+
+(1+ NUMBER)	(1+ 5) ;returns 6	; used to increase variable by 1, count up
+(1- NUMBER)	(1- 5) ;returns 4	; used to decrease variable by 1, count down
+
+
+23. Selection sets                           *autolisp-selection-sets*
+
+(ssget [MODE] [PT1] [PT2] [PT-LIST] [FILTER-LIST])		; Creates a list of entie names
+(setq SS (ssget))	; create a selection set with the variable name SS1
+		
+ Modes:
+ MODE		Selection Method						Syntax
+ none		User selection by any method			(ssget)
+ <point>	Select entity passing through <point>	(ssget <point>)
+ "L"		Select Last entity found in database	(ssget "L")
+ "P"		Select Previous selection set entities	(ssget "P")
+ "W"		Select entities by Windowing			(ssget "W")
+ "C"		Select entities by Crossing				(ssget "C")
+ "I"		Select entities by Implied sel.	set		(ssget "I")
+ "F"		Select entities by Fence selection		(ssget "F")
+ "WP"		Select entities by Window Polygon		(ssget "WP")
+ "CP"		Crossing Polygon selection method		(ssget "CP")
+ "X"		Select all entities in teh database		(ssget "X")
+ 
+ (ssgetfirst) 	;returns two list one of grip selected object and another of gripped amd selected
+ (sslength SS)	; returns a interger with number of entities in a selection
+ (ssname SS INDEX)	;returns the name of the entity at the index location given
+ (ssnamex SS INDEX)	;returns the name of the entity based on how it was selected
+ (ssadd ENAME SS)	;add entity to a selection set
+ (ssdel ENAME SS)	;deletes entity from selection set
+ (ssmemb ENAME SS)	;test if ENAME is part of selection set if so ENAME is returned else NIL
+
+
+
+
+
+
