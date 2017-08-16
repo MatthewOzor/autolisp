@@ -10,13 +10,12 @@ commands and is a work in progress.  Items missing are dialog boxes
 file handling and VL extensions.
 
 Also include is a VBScript to reload your AutoLisp routing from within
-VIM to allow fast testing in AutoCAD. Plans to generate this file 
-in VIM script are in progress.  
+VIM to allow fast testing in AutoCAD.  
 
 Features
 ------------
 * :h autolisp       to open the AutoLisp cheatsheet
-* :AutolispReload   run the vbscript and reloads your Autolisp routine in AutoCAD
+* :AutolispReload   generates a vbscript to load file through COM and reloads your Autolisp routine in AutoCAD
 
 Installation
 ------------
