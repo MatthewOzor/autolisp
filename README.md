@@ -19,7 +19,7 @@ Features
 
 Suggestion to map a key to reload the AutoLisp file
 
-map <F3> :silent AutolispReload<CR>
+map &lt;F3&gt; :silent AutolispReload<CR>
 
 Installation
 ------------
