@@ -17,6 +17,9 @@ Features
 * :h autolisp       to open the AutoLisp cheatsheet
 * :AutolispReload   generates a vbscript to load file through COM and reloads your Autolisp routine in AutoCAD
 
+Suggestion to map a key to reload the AutoLisp file
+map <F3> :silent AutolispReload<CR>
+
 Installation
 ------------
 
