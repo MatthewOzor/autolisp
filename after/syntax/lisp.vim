@@ -39,7 +39,7 @@ syn keyword lispFunc		handent
 syn keyword lispFunc		initget
 syn keyword lispFunc		inters
 syn keyword lispFunc		itoa
-syn keyword lispFunc		netsel
+syn keyword lispFunc		nentsel
 syn keyword lispFunc		osnap
 syn keyword lispFunc		polar
 syn keyword lispFunc		prompt
